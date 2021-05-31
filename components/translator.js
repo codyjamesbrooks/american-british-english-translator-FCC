@@ -10,28 +10,38 @@ class Translator {
 
     // translate time
     translatedText = translatedText.replace(
-      /([01][0-9]):([0-6][0-9])/g,
+      /([01]*[0-9]):([0-6][0-9])/g,
       this.highlightText("$1.$2")
     );
 
-    let translationArray = [
-      americanOnly,
-      americanToBritishSpelling,
-      americanToBritishTitles,
-    ];
+    // handle titles
+    for (const title of Object.keys(americanToBritishTitles)) {
+      let titleRegex = new RegExp(`\\b(${title.slice(0, -1)})\\.`, "gi");
+      translatedText = translatedText.replace(
+        titleRegex,
+        this.highlightText("$1")
+      );
+    }
+
+    // translate american spelling and phrases
+    let translationArray = [americanOnly, americanToBritishSpelling];
 
     for (const translationObjet of translationArray) {
-      for (const [wordToTranslate, wordAfterTranslate] of Object.entries(
+      for (const [americanSpelling, britishSpelling] of Object.entries(
         translationObjet
       )) {
-        let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
+        let wordToTranslateRegex = new RegExp(
+          `\\b${americanSpelling}\\b`,
+          "gi"
+        );
         translatedText = translatedText.replace(
           wordToTranslateRegex,
-          this.highlightText(wordAfterTranslate)
+          this.highlightText(britishSpelling)
         );
       }
     }
 
+    if (translatedText == text) return "Everything looks good to me!";
     return translatedText;
   }
 
@@ -40,32 +50,42 @@ class Translator {
 
     // translate time
     translatedText = translatedText.replace(
-      /([01][0-9])\.([0-6][0-9])/g,
-      this.highlightText("$1.$2")
+      /([01]*[0-9])\.([0-6][0-9])/g,
+      this.highlightText("$1:$2")
     );
 
-    for (const [wordToTranslate, wordAfterTranslate] of Object.entries(
-      britishOnly
-    )) {
-      let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
+    // handle titles
+    for (const title of Object.values(americanToBritishTitles)) {
+      let titleRegex = new RegExp(`\\b(${title})\\b`, "gi");
       translatedText = translatedText.replace(
-        wordToTranslateRegex,
-        this.highlightText(wordAfterTranslate)
+        titleRegex,
+        this.highlightText("$1.")
       );
     }
 
-    let translationArray = [americanToBritishSpelling, americanToBritishTitles];
-    for (const translationObject of translationArray) {
-      for (const [wordAfterTranslate, wordToTranslate] of Object.entries(
-        translationObject
-      )) {
-        let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
-        translatedText = translatedText.replace(
-          wordToTranslateRegex,
-          this.highlightText(wordAfterTranslate)
-        );
-      }
+    // translate british spelling to american
+    for (const [americanSpelling, britishSpelling] of Object.entries(
+      americanToBritishSpelling
+    )) {
+      let wordToTranslateRegex = new RegExp(`\\b${britishSpelling}\\b`, "gi");
+      translatedText = translatedText.replace(
+        wordToTranslateRegex,
+        this.highlightText(americanSpelling)
+      );
     }
+
+    // translate british phrases
+    for (const [britishSpelling, americanSpelling] of Object.entries(
+      britishOnly
+    )) {
+      let wordToTranslateRegex = new RegExp(`\\b${britishSpelling}\\b`, "gi");
+      translatedText = translatedText.replace(
+        wordToTranslateRegex,
+        this.highlightText(americanSpelling)
+      );
+    }
+    if (translatedText == text) return "Everything looks good to me!";
+    return translatedText;
   }
 
   highlightText(text) {
