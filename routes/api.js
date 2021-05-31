@@ -13,8 +13,14 @@ module.exports = function (app) {
       return res.json({ error: "No text to translate" });
     }
 
+    let translatedText;
     if (req.body.locale === "american-to-british") {
-      let translatedText = translator.americanToBritish(req.body.text);
+      translatedText = translator.americanToBritish(req.body.text);
+      return res.json({ translation: translatedText });
+    }
+
+    if (req.body.locale === "british-to-american") {
+      translatedText = translator.britishToAmerican(req.body.text);
       return res.json({ translation: translatedText });
     }
   });

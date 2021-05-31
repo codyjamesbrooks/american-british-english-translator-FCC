@@ -10,7 +10,7 @@ class Translator {
 
     // translate time
     translatedText = translatedText.replace(
-      /([01][1-9]):([0-6][0-9])/g,
+      /([01][0-9]):([0-6][0-9])/g,
       this.highlightText("$1.$2")
     );
 
@@ -24,7 +24,7 @@ class Translator {
       for (const [wordToTranslate, wordAfterTranslate] of Object.entries(
         translationObjet
       )) {
-        let wordToTranslateRegex = new RegExp(wordToTranslate, "gi");
+        let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
         translatedText = translatedText.replace(
           wordToTranslateRegex,
           this.highlightText(wordAfterTranslate)
@@ -33,6 +33,39 @@ class Translator {
     }
 
     return translatedText;
+  }
+
+  britishToAmerican(text) {
+    let translatedText = (" " + text).slice(1);
+
+    // translate time
+    translatedText = translatedText.replace(
+      /([01][0-9])\.([0-6][0-9])/g,
+      this.highlightText("$1.$2")
+    );
+
+    for (const [wordToTranslate, wordAfterTranslate] of Object.entries(
+      britishOnly
+    )) {
+      let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
+      translatedText = translatedText.replace(
+        wordToTranslateRegex,
+        this.highlightText(wordAfterTranslate)
+      );
+    }
+
+    let translationArray = [americanToBritishSpelling, americanToBritishTitles];
+    for (const translationObject of translationArray) {
+      for (const [wordAfterTranslate, wordToTranslate] of Object.entries(
+        translationObject
+      )) {
+        let wordToTranslateRegex = new RegExp(`\\b${wordToTranslate}\\b`, "gi");
+        translatedText = translatedText.replace(
+          wordToTranslateRegex,
+          this.highlightText(wordAfterTranslate)
+        );
+      }
+    }
   }
 
   highlightText(text) {
