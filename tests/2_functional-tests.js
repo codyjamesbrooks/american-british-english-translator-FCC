@@ -19,7 +19,7 @@ suite("Functional Tests", () => {
           assert.equal(res.type, "application/json");
           assert.equal(
             res.body.translation,
-            "<span class='highlight'>rumour</span>"
+            '<span class="highlight">rumour</span>'
           );
           done();
         });

@@ -187,28 +187,28 @@ suite("Unit Tests", () => {
     test("Proper highlight of 'Mangoes are my favorite fruit'", () => {
       assert.include(
         translator.americanToBritish("Mangoes are my favorite fruit"),
-        "<span class='highlight'>favourite</span>",
+        '<span class="highlight">favourite</span>',
         "Incorrect highlight"
       );
     });
     test("Proper highlight of 'I ate yogurt for breakfast'", () => {
       assert.include(
         translator.americanToBritish("I ate yogurt for breakfast"),
-        "<span class='highlight'>yoghurt</span>",
+        '<span class="highlight">yoghurt</span>',
         "Incorrect highlight"
       );
     });
     test("Proper highlight of 'We watched the footie match for a while'", () => {
       assert.include(
         translator.britishToAmerican("We watched the footie match for a while"),
-        "<span class='highlight'>soccer</span>",
+        '<span class="highlight">soccer</span>',
         "Incorrect highlight"
       );
     });
     test("Proper highlight of 'Paracetamol takes up to an hour to work'", () => {
       assert.include(
         translator.britishToAmerican("Paracetamol takes up to an hour to work"),
-        "<span class='highlight'>Tylenol</span>",
+        '<span class="highlight">Tylenol</span>',
         "Incorrect highlight"
       );
     });
