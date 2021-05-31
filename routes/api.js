@@ -7,21 +7,28 @@ module.exports = function (app) {
   const translator = new Translator();
 
   app.route("/api/translate").post((req, res) => {
-    console.log(req.body);
+    if (req.body.text == null || req.body.locale == null) {
+      return res.json({ error: "Required field(s) missing" });
+    }
 
-    if (!req.body.text) {
+    if (req.body.text === "") {
       return res.json({ error: "No text to translate" });
+    }
+
+    if (
+      req.body.locale !== "american-to-british" &&
+      req.body.locale !== "british-to-american"
+    ) {
+      return res.json({ error: "Invalid value for locale field" });
     }
 
     let translatedText;
     if (req.body.locale === "american-to-british") {
       translatedText = translator.americanToBritish(req.body.text);
-      return res.json({ translation: translatedText });
+    } else {
+      translatedText = translator.britishToAmerican(req.body.text);
     }
 
-    if (req.body.locale === "british-to-american") {
-      translatedText = translator.britishToAmerican(req.body.text);
-      return res.json({ translation: translatedText });
-    }
+    return res.json({ translation: translatedText });
   });
 };
