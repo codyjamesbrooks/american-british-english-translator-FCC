@@ -29,7 +29,6 @@ module.exports = function (app) {
       translatedText = translator.britishToAmerican(req.body.text);
     }
 
-    // console.log(`text: ${req.body.text} translation: ${translatedText}`);
     return res.send({ text: req.body.text, translation: translatedText });
   });
 };
